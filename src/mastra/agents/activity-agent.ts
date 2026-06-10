@@ -1,5 +1,6 @@
 import { Agent } from '@mastra/core/agent';
 import { scorers } from '../scorers/weather-scorer';
+import { localClaude } from '../models/local-claude';
 
 export const activityAgent = new Agent({
   id: 'activity-agent',
@@ -22,7 +23,8 @@ Guidelines:
 - If precipitation chance is above 50%, prefer indoor activities
 - Activities must be specific to the city, not generic
 - Keep it concise`,
-  model: 'anthropic/claude-sonnet-4-5',
+  // Local Claude Code (subscription auth) — no ANTHROPIC_API_KEY needed
+  model: localClaude,
   scorers: {
     completeness: {
       scorer: scorers.completenessScorer,

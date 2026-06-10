@@ -7,10 +7,11 @@ The use case is deliberately simple: **a trip planner**. The point is not the AI
 ## Quickstart
 
 ```bash
-cp .env.example .env   # add your ANTHROPIC_API_KEY
 bun install            # or: npm install
 bun run dev            # or: npm run dev
 ```
+
+**No API key needed.** All models run through your local [Claude Code](https://claude.com/claude-code) install (Pro/Max subscription auth) via [`ai-sdk-provider-claude-code`](https://github.com/ben-vargas/ai-sdk-provider-claude-code) — each request spawns `claude` headlessly through the Claude Agent SDK. Prerequisite: `claude` installed and logged in. See `src/mastra/models/local-claude.ts` for the three model variants (plain chat, MCP-bridged weather tool, builder with native file tools). To use the Anthropic API instead, set `ANTHROPIC_API_KEY` and point agents back at the `'anthropic/claude-sonnet-4-5'` model string.
 
 Open **http://localhost:4111** — that's [Mastra Studio](https://mastra.ai/docs/studio/overview).
 

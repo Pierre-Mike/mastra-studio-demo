@@ -22,6 +22,11 @@ import {
 } from './scorers/weather-scorer';
 
 export const mastra = new Mastra({
+  // The Claude Agent SDK spawns the local `claude` binary by path — it must
+  // stay in node_modules, not be inlined into the .mastra bundle
+  bundler: {
+    externals: ['ai-sdk-provider-claude-code', '@anthropic-ai/claude-agent-sdk'],
+  },
   workflows: { tripPlannerWorkflow },
   agents: { weatherAgent, activityAgent, packingAgent, builderAgent },
   scorers: { toolCallAppropriatenessScorer, completenessScorer, translationScorer },
