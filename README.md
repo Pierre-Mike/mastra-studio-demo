@@ -46,6 +46,64 @@ Open **http://localhost:4111** — that's [Mastra Studio](https://mastra.ai/docs
    - Note: editing `index.ts` restarts the dev server, so the builder's reply may cut off — the new agent is still created. An agent that builds agents, live.
 7. Edit any agent's instructions in `src/mastra/agents/` — Studio hot-reloads.
 
+## Demo prompts (copy-paste)
+
+### Weather Agent — tool calls, memory, scorers
+
+```text
+What's the weather in Paris?
+```
+
+```text
+And what about 東京? Should I bike there today?
+```
+*(non-English location → exercises the custom translation scorer; follow-up → exercises memory)*
+
+### trip-planner-workflow — run input
+
+```json
+{ "city": "Tokyo" }
+```
+
+### Builder Agent — each prompt loads a different skill
+
+Create an agent (`create-agent` skill):
+
+```text
+Create a haiku agent that answers every question as a haiku.
+```
+
+Create an agent + tool (`create-agent` skill, tool section):
+
+```text
+Create a currency agent with a tool that converts an amount between two
+currencies using the free frankfurter.app API.
+```
+
+Create a workflow (`create-workflow` skill):
+
+```text
+Create a daily-digest workflow: first step fetches the weather for a city
+(reuse the Open-Meteo pattern), then the haiku agent and the packing
+assistant run in parallel, and a final step merges both into one digest.
+```
+
+Create and attach a scorer (`create-scorer` skill):
+
+```text
+Create a "haiku-format" scorer that checks responses are exactly three lines,
+and attach it to the haiku agent with 100% sampling.
+```
+
+Ask a framework question (official `mastra` skill):
+
+```text
+What is the difference between .then() and .parallel() in a Mastra workflow,
+and how does the merge step receive the parallel outputs?
+```
+
+Watch the chat: the builder calls the `skill` tool first, loads only the matching SKILL.md, then writes the files. After hot reload, the new agent/workflow/scorer is in the sidebar — run prompt #1 against it.
+
 ## Why this sells itself
 
 - **One file** (`src/mastra/index.ts`) wires the whole platform: storage, logging, tracing, agents, workflows, scorers.
