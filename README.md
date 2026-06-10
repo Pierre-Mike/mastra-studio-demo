@@ -26,6 +26,7 @@ Open **http://localhost:4111** — that's [Mastra Studio](https://mastra.ai/docs
 | **Memory** | `agents/weather-agent.ts` | Conversation memory backed by local LibSQL |
 | **Agent Editor** | `src/mastra/index.ts` (`MastraEditor`) | Edit agent instructions/tools from Studio — no code, no redeploy. Draft/publish versioning stored in `editor.db` |
 | **Builder Agent (Workspace)** | `agents/builder-agent.ts` | Meta-agent with a `Workspace` (filesystem + sandbox) pointed at this project's own `src/mastra` — ask it to create a new agent and watch it appear in Studio via hot reload |
+| **Skills** | `src/mastra/skills/` | `SKILL.md` files (Agent Skills spec): 3 project skills (create-agent, create-workflow, create-scorer) + the official [mastra skill](https://github.com/mastra-ai/skills). The builder sees only names in its prompt and loads the full skill on demand |
 
 ## 5-minute demo script
 
@@ -40,7 +41,8 @@ Open **http://localhost:4111** — that's [Mastra Studio](https://mastra.ai/docs
    - Versions are stored in `editor.db`, not your source files — compare, roll back, full history. Code stays the source of truth for `id`/`name`/`model`.
    - *Packing Assistant* is locked (`editor: false` in code) — show the contrast.
 6. **Builder Agent** (the showstopper) → open *Builder Agent* → say *"Create a haiku agent that answers everything as a haiku"*.
-   - It writes `agents/haiku-agent.ts` and registers it in `index.ts` with its workspace tools; hot reload makes the new agent appear in the sidebar seconds later.
+   - It loads the `create-agent` skill (a markdown file in `skills/` — progressive disclosure, only what the request needs), writes `agents/haiku-agent.ts`, and registers it in `index.ts`; hot reload makes the new agent appear in the sidebar seconds later.
+   - The conventions live in `SKILL.md` files your team can edit without touching code.
    - Note: editing `index.ts` restarts the dev server, so the builder's reply may cut off — the new agent is still created. An agent that builds agents, live.
 7. Edit any agent's instructions in `src/mastra/agents/` — Studio hot-reloads.
 

@@ -22,46 +22,24 @@ const projectRoot = findProjectRoot();
 const workspace = new Workspace({
   filesystem: new LocalFilesystem({ basePath: join(projectRoot, 'src/mastra') }),
   sandbox: new LocalSandbox({ workingDirectory: projectRoot }),
+  // SKILL.md dirs under src/mastra/skills/ — listed in the system prompt by
+  // name only; the agent loads full instructions on demand via skill tools
+  skills: ['skills'],
 });
 
 export const builderAgent = new Agent({
   id: 'builder-agent',
   name: 'Builder Agent',
   description: 'Meta-agent: creates new agents and workflows by writing source files. Hot reload makes them appear in Studio immediately.',
-  instructions: `You are a Mastra project builder. You create new agents, tools, and workflows in THIS project by writing TypeScript files with your workspace tools. The dev server hot-reloads, so anything you write appears in Studio within seconds.
+  instructions: `You are a Mastra project builder. You create new agents, tools, workflows, and scorers in THIS project by writing TypeScript files with your workspace tools. The dev server hot-reloads, so anything you write appears in Studio within seconds.
 
-Project layout (your filesystem root is src/mastra):
-- agents/<kebab-name>-agent.ts — one agent per file
-- tools/<kebab-name>-tool.ts — one tool per file
-- workflows/<kebab-name>-workflow.ts — one workflow per file
-- index.ts — the Mastra instance; every agent/workflow MUST be registered here
+ALWAYS load the matching skill BEFORE building anything:
+- create-agent — new agent (and optional tool)
+- create-workflow — new workflow
+- create-scorer — new eval scorer or attaching one
+- mastra — general framework/API questions and anything not covered above
 
-Agent file template:
-\`\`\`ts
-import { Agent } from '@mastra/core/agent';
-
-export const fooAgent = new Agent({
-  id: 'foo-agent',
-  name: 'Foo Agent',
-  instructions: \`...\`,
-  model: 'anthropic/claude-sonnet-4-5',
-});
-\`\`\`
-
-Workflow file template (steps with Zod schemas, chained with .then(), optional .parallel([a, b]), always .commit() before export):
-\`\`\`ts
-import { createStep, createWorkflow } from '@mastra/core/workflows';
-import { z } from 'zod';
-\`\`\`
-
-Registration: read index.ts first, then add the import and the entry in the agents/workflows map. Never remove existing registrations.
-
-Rules:
-1. Read existing files (e.g. agents/weather-agent.ts) before writing, to match conventions.
-2. Write the new file(s) FIRST, edit index.ts LAST — editing index.ts triggers a server restart.
-3. Keep your final message short: just list the files you wrote. The proof is the new agent appearing in Studio's sidebar.
-4. Only create/edit files under agents/, tools/, workflows/, scorers/, and index.ts. Never touch anything else.
-5. Use model 'anthropic/claude-sonnet-4-5' for new agents unless asked otherwise.`,
+Follow the loaded skill exactly. Only create/edit files under agents/, tools/, workflows/, scorers/, and index.ts — never touch skills/ or anything else.`,
   model: 'anthropic/claude-sonnet-4-5',
   workspace,
   memory: new Memory(),
