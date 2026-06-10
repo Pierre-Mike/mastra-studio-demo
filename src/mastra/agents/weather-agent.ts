@@ -2,6 +2,7 @@ import { Agent } from '@mastra/core/agent';
 import { Memory } from '@mastra/memory';
 import { weatherTool } from '../tools/weather-tool';
 import { scorers } from '../scorers/weather-scorer';
+import { localClaudeWeather } from '../models/local-claude';
 
 export const weatherAgent = new Agent({
   id: 'weather-agent',
@@ -18,7 +19,10 @@ Your primary function is to help users get weather details for specific location
 - If the user asks for activities, respond in the format they request.
 
 Use the weatherTool to fetch current weather data.`,
-  model: 'anthropic/claude-sonnet-4-5',
+  // Local Claude Code (subscription auth) — the weather tool reaches the model
+  // as an MCP tool bridged in models/local-claude.ts. The Mastra tool below is
+  // kept so switching back to an API model string keeps working.
+  model: localClaudeWeather,
   tools: { weatherTool },
   scorers: {
     toolCallAppropriateness: {

@@ -3,6 +3,7 @@ import { createToolCallAccuracyScorerCode } from '@mastra/evals/scorers/prebuilt
 import { createCompletenessScorer } from '@mastra/evals/scorers/prebuilt';
 import { getAssistantMessageFromRunOutput, getUserMessageFromRunInput } from '@mastra/evals/scorers/utils';
 import { createScorer } from '@mastra/core/evals';
+import { localClaude } from '../models/local-claude';
 
 export const toolCallAppropriatenessScorer = createToolCallAccuracyScorerCode({
   expectedTool: 'weatherTool',
@@ -18,7 +19,8 @@ export const translationScorer = createScorer({
   description: 'Checks that non-English location names are translated and used correctly',
   type: 'agent',
   judge: {
-    model: 'anthropic/claude-sonnet-4-5',
+    // LLM judge also runs on local Claude Code (structured output via the Agent SDK)
+    model: localClaude,
     instructions:
       'You are an expert evaluator of translation quality for geographic locations. ' +
       'Determine whether the user text mentions a non-English location and whether the assistant correctly uses an English translation of that location. ' +

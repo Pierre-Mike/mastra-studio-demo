@@ -1,4 +1,5 @@
 import { Agent } from '@mastra/core/agent';
+import { localClaude } from '../models/local-claude';
 
 export const packingAgent = new Agent({
   id: 'packing-agent',
@@ -14,7 +15,8 @@ Guidelines:
 - 5 to 8 items maximum
 - Every item must be justified by the forecast (temperature, rain, sun)
 - No generic filler like "phone charger"`,
-  model: 'anthropic/claude-sonnet-4-5',
+  // Local Claude Code (subscription auth) — no ANTHROPIC_API_KEY needed
+  model: localClaude,
   // Locked in the Agent Editor — contrast with the other agents, which are editable
   editor: false,
 });
