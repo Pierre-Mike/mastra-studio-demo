@@ -15,4 +15,6 @@ Guidelines:
 - Every item must be justified by the forecast (temperature, rain, sun)
 - No generic filler like "phone charger"`,
   model: 'anthropic/claude-sonnet-4-5',
+  // Locked in the Agent Editor — contrast with the other agents, which are editable
+  editor: false,
 });

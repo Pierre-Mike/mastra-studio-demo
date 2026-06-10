@@ -46,3 +46,4 @@ dist
 # local duckdb traces
 *.duckdb
 *.duckdb.wal
+editor.db*

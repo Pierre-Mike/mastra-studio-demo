@@ -24,6 +24,7 @@ Open **http://localhost:4111** — that's [Mastra Studio](https://mastra.ai/docs
 | **Evals / Scorers** | `src/mastra/scorers/` | 2 built-in scorers (tool-call accuracy, completeness) + 1 custom LLM-judged scorer |
 | **Traces** | `src/mastra/index.ts` | Observability enabled — every agent call and workflow run is traced and stored locally |
 | **Memory** | `agents/weather-agent.ts` | Conversation memory backed by local LibSQL |
+| **Agent Editor** | `src/mastra/index.ts` (`MastraEditor`) | Edit agent instructions/tools from Studio — no code, no redeploy. Draft/publish versioning stored in `editor.db` |
 
 ## 5-minute demo script
 
@@ -34,7 +35,10 @@ Open **http://localhost:4111** — that's [Mastra Studio](https://mastra.ai/docs
 3. **Observability** → open the trace of the run you just did — every step, LLM call, token count, and latency, nested as spans.
 4. **Scorers** → see eval scores attached to the agent runs (sampling is set to 100% so every run is scored).
    - The custom scorer (`translation-quality-scorer`) is an LLM judge defined in ~50 lines: preprocess → analyze → score → reason.
-5. Edit any agent's instructions in `src/mastra/agents/` — Studio hot-reloads.
+5. **Agent Editor** → open *Weather Agent* → edit its instructions **directly in Studio** → *Save* (draft) → *Publish*.
+   - Versions are stored in `editor.db`, not your source files — compare, roll back, full history. Code stays the source of truth for `id`/`name`/`model`.
+   - *Packing Assistant* is locked (`editor: false` in code) — show the contrast.
+6. Edit any agent's instructions in `src/mastra/agents/` — Studio hot-reloads.
 
 ## Why this sells itself
 

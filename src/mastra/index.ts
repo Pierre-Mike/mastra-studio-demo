@@ -9,6 +9,7 @@ import {
   MastraPlatformExporter,
   SensitiveDataFilter,
 } from '@mastra/observability';
+import { MastraEditor } from '@mastra/editor';
 import { tripPlannerWorkflow } from './workflows/trip-planner-workflow';
 import { weatherAgent } from './agents/weather-agent';
 import { activityAgent } from './agents/activity-agent';
@@ -31,8 +32,15 @@ export const mastra = new Mastra({
     }),
     domains: {
       observability: await new DuckDBStore().getStore('observability'),
+      // Agent Editor drafts/published versions live in their own local db
+      editor: new LibSQLStore({
+        id: 'mastra-editor',
+        url: 'file:./editor.db',
+      }),
     },
   }),
+  // Agent Editor: edit instructions/tools from Studio with draft/publish versioning
+  editor: new MastraEditor(),
   logger: new PinoLogger({
     name: 'Mastra',
     level: 'info',
