@@ -25,6 +25,7 @@ Open **http://localhost:4111** — that's [Mastra Studio](https://mastra.ai/docs
 | **Traces** | `src/mastra/index.ts` | Observability enabled — every agent call and workflow run is traced and stored locally |
 | **Memory** | `agents/weather-agent.ts` | Conversation memory backed by local LibSQL |
 | **Agent Editor** | `src/mastra/index.ts` (`MastraEditor`) | Edit agent instructions/tools from Studio — no code, no redeploy. Draft/publish versioning stored in `editor.db` |
+| **Builder Agent (Workspace)** | `agents/builder-agent.ts` | Meta-agent with a `Workspace` (filesystem + sandbox) pointed at this project's own `src/mastra` — ask it to create a new agent and watch it appear in Studio via hot reload |
 
 ## 5-minute demo script
 
@@ -38,7 +39,10 @@ Open **http://localhost:4111** — that's [Mastra Studio](https://mastra.ai/docs
 5. **Agent Editor** → open *Weather Agent* → edit its instructions **directly in Studio** → *Save* (draft) → *Publish*.
    - Versions are stored in `editor.db`, not your source files — compare, roll back, full history. Code stays the source of truth for `id`/`name`/`model`.
    - *Packing Assistant* is locked (`editor: false` in code) — show the contrast.
-6. Edit any agent's instructions in `src/mastra/agents/` — Studio hot-reloads.
+6. **Builder Agent** (the showstopper) → open *Builder Agent* → say *"Create a haiku agent that answers everything as a haiku"*.
+   - It writes `agents/haiku-agent.ts` and registers it in `index.ts` with its workspace tools; hot reload makes the new agent appear in the sidebar seconds later.
+   - Note: editing `index.ts` restarts the dev server, so the builder's reply may cut off — the new agent is still created. An agent that builds agents, live.
+7. Edit any agent's instructions in `src/mastra/agents/` — Studio hot-reloads.
 
 ## Why this sells itself
 

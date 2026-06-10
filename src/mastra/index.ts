@@ -14,6 +14,7 @@ import { tripPlannerWorkflow } from './workflows/trip-planner-workflow';
 import { weatherAgent } from './agents/weather-agent';
 import { activityAgent } from './agents/activity-agent';
 import { packingAgent } from './agents/packing-agent';
+import { builderAgent } from './agents/builder-agent';
 import {
   toolCallAppropriatenessScorer,
   completenessScorer,
@@ -22,7 +23,7 @@ import {
 
 export const mastra = new Mastra({
   workflows: { tripPlannerWorkflow },
-  agents: { weatherAgent, activityAgent, packingAgent },
+  agents: { weatherAgent, activityAgent, packingAgent, builderAgent },
   scorers: { toolCallAppropriatenessScorer, completenessScorer, translationScorer },
   storage: new MastraCompositeStore({
     id: 'composite-storage',
